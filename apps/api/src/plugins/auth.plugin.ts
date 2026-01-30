@@ -1,12 +1,12 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-export async function authPlugin(app: FastifyInstance) {
+export function authPlugin(app: FastifyInstance) {
   app.decorate(
     "authenticate",
-    async (req: any, reply: any) => {
+    async (req: FastifyRequest, reply: FastifyReply) => {
       try {
         await req.jwtVerify();
-      } catch {
+      } catch (err: any) {
         reply.status(401).send({ message: "Unauthorized" });
       }
     }

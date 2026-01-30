@@ -2,15 +2,13 @@ import Fastify from "fastify";
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
 import { authRoutes } from "./auth/auth.routes";
-import { authPlugin } from "./plugins/auth.plugin";
+import { authenticateHandler } from "./auth/auth.handlers";
 
 export function buildServer() {
   const app = Fastify({ logger: true });
 
   app.register(cors, { origin: true });
   app.register(jwt, { secret: process.env.JWT_SECRET! });
-
-  app.register(authPlugin);
   app.register(authRoutes, { prefix: "/auth" });
 
   app.get("/health", async () => {
@@ -19,7 +17,9 @@ export function buildServer() {
 
   app.get(
     "/protected",
-    { preHandler: [(app as any).authenticate] },
+    {
+      preHandler: [authenticateHandler]
+    },
     async (req) => {
       return { message: "You are authenticated", user: req.user };
     }

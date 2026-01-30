@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { buildServer } from "./server";
 
 const server = buildServer();
@@ -9,3 +12,5 @@ server.listen({ port: 3000 }, (err, address) => {
   }
   console.log(`🚀 API running at ${address}`);
 });
+
+
